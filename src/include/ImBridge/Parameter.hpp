@@ -120,17 +120,14 @@ namespace ImBridge {
 	class ParameterBoolean : public Parameter
 	{
 	public:
-		ParameterBoolean(const std::string& name, bool value, const std::string& desc = "")
+		ParameterBoolean(const std::string& name, bool& value, const std::string& desc = "")
 			: Parameter(name, desc), _value(value) {};
 
 		void render(float sliderSpeed = DEFAULT_SLIDER_SPEED) override
 		{
 			drawParameter(_name.c_str(), [this]()
 			{
-				if (ImGui::Checkbox(_name.c_str(), &_value))
-				{
-
-				}
+				ImGui::Checkbox(_name.c_str(), &_value);
 			}, _description);
 		};
 
