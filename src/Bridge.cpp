@@ -16,9 +16,10 @@ namespace ImBridge {
 		_parameters.push_back(ParameterFactory::Float(label, value, min, max, desc));
 	}
 
-	void Bridge::addInt(const std::string& label, int& value, int min, int max, const std::string& desc)
+	void Bridge::addInt(const std::string& label, int& value, int min, int max, const std::string& desc, CallbackInt callback)
 	{
-		_parameters.push_back(ParameterFactory::Int(label, value, min, max, desc));
+		auto parameter = std::make_shared<ParameterInt>(label, value, min, max, desc, callback);
+		_parameters.push_back(parameter);
 	}
 
 	void Bridge::addBool(const std::string& label, bool& value, const std::string& desc)

@@ -18,8 +18,8 @@ namespace ImBridge {
 
 		void addFloat(const std::string& label, float& value, float min, float max, const std::string& desc = "");
 		
-		void addInt(const std::string& label, int& value, int min, int max, const std::string& desc = "");
-		
+		void addInt(const std::string& label, int& value, int min, int max, const std::string& desc = "", CallbackInt callback = [](int) {});
+
 		void addBool(const std::string& label, bool& value, const std::string& desc = "");
 		
 		void addVec3(const std::string& label, glm::vec3& value, const std::string& desc = "");

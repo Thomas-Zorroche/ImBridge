@@ -94,10 +94,9 @@ namespace ImBridge {
 	class ParameterInt : public Parameter
 	{
 	public:
-		ParameterInt(const std::string& name, int& value, int min, int max, 
-			const std::string& desc = "")
-			: Parameter(name, desc), _value(value), _min(min), _max(max) {};
-
+		ParameterInt(const std::string& name, int& value, int min, int max,
+			const std::string& desc = "", CallbackInt callback = [](int) {})
+			: Parameter(name, desc), _value(value), _min(min), _max(max), _callback(callback) {};
 
 		void render(float sliderSpeed = DEFAULT_SLIDER_SPEED) override
 		{
@@ -105,16 +104,16 @@ namespace ImBridge {
 			{
 				if (ImGui::SliderInt(("##" + _name).c_str(), &_value, _min, _max))
 				{
-
+					_callback(_value);
 				}
 			}, _description);
-
 		};
 
 	private:
 		int& _value;
 		int _min;
 		int _max;
+		CallbackInt _callback;
 	};
 
 	class ParameterBoolean : public Parameter

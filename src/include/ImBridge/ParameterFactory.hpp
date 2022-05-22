@@ -15,11 +15,11 @@ namespace ImBridge {
 			return std::make_shared<ParameterFloat>(name, value, min, max, desc);
 		}
 
-		static std::shared_ptr<Parameter>
-		Int(const std::string& name, int& value, int min, int max, const std::string& desc = "")
-		{
-			return std::make_shared<ParameterInt>(name, value, min, max, desc);
-		}
+		//static std::shared_ptr<Parameter>
+		//Int(const std::string& name, int& value, int min, int max, const std::string& desc = "", CallbackInt callback = [](int) {})
+		//{
+		//	return std::make_shared<ParameterInt>(name, value, min, max, desc, callback);
+		//}
 
 		static std::shared_ptr<Parameter>
 		Bool(const std::string& name, bool& value, const std::string& desc = "")
