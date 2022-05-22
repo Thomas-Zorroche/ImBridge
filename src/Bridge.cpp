@@ -1,7 +1,6 @@
 ﻿#include "Bridge.hpp"
 
 #include "Parameter.hpp"
-#include "ParameterFactory.hpp"
 
 namespace ImBridge {
 
@@ -13,35 +12,43 @@ namespace ImBridge {
 
 	void Bridge::addFloat(const std::string& label, float& value, float min, float max, const std::string& desc)
 	{
-		_parameters.push_back(ParameterFactory::Float(label, value, min, max, desc));
+		auto parameter = std::make_shared<ParameterFloat>(label, value, min, max, desc);
+		_parameters.insert({ label, parameter });
 	}
 
 	void Bridge::addInt(const std::string& label, int& value, int min, int max, const std::string& desc, CallbackInt callback)
 	{
 		auto parameter = std::make_shared<ParameterInt>(label, value, min, max, desc, callback);
-		_parameters.push_back(parameter);
+		_parameters.insert({ label, parameter });
 	}
 
 	void Bridge::addBool(const std::string& label, bool& value, const std::string& desc)
 	{
-		_parameters.push_back(ParameterFactory::Bool(label, value, desc));
+		auto parameter = std::make_shared<ParameterBoolean>(label, value, desc);
+		_parameters.insert({ label, parameter });
 	}
 
 	void Bridge::addVec3(const std::string& label, glm::vec3& value, const std::string& desc)
 	{
-		_parameters.push_back(ParameterFactory::Vec3(label, value, desc));
+		auto parameter = std::make_shared<ParameterVec3>(label, value, desc);
+		_parameters.insert({ label, parameter });
 	}
 
 	void Bridge::addCombo(const std::string& label, const char* items_separated_by_zeros,
 		unsigned int nItems, CallbackCombo callback, const std::string& desc)
 	{
-		_parameters.push_back(ParameterFactory::Combo(label, items_separated_by_zeros, nItems, callback, desc));
+		auto parameter = std::make_shared<ParameterCombo>(label, items_separated_by_zeros, nItems, callback, desc);
+		_parameters.insert({ label, parameter });
 	}
 
-	std::vector<std::shared_ptr<Parameter> >& Bridge::getParameters()
+	const std::map<std::string, std::shared_ptr<Parameter>>::iterator Bridge::getParametersBegin()
 	{
-		return _parameters;
+		return _parameters.begin();
 	}
 
+	const std::map<std::string, std::shared_ptr<Parameter>>::iterator Bridge::getParametersEnd()
+	{
+		return _parameters.end();
+	}
 }
 

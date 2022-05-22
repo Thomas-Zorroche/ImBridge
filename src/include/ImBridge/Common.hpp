@@ -4,7 +4,13 @@
 
 #include <functional>
 
+namespace ImBridge
+{
+
 using CallbackInt = std::function<void(int)>;
 
 using CallbackCombo = std::function<void(unsigned int)>;
+
+}
+
 

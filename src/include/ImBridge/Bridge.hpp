@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <map>
 #include <glm/glm.hpp>
 
 #include "Common.hpp"
@@ -30,11 +31,21 @@ namespace ImBridge {
 		void addCombo(const std::string& label, const char* items_separated_by_zeros,
 			unsigned int nItems, CallbackCombo callback, const std::string& desc);
 
-		std::vector<std::shared_ptr<Parameter> >& getParameters();
+		const std::map<std::string, std::shared_ptr<Parameter>>::iterator getParametersBegin();
+		const std::map<std::string, std::shared_ptr<Parameter>>::iterator getParametersEnd();
+
+		template<typename T>
+		std::shared_ptr<T>& getParameter(const std::string& parameterName)
+		{
+			auto& parameter = _parameters[parameterName];
+			if (auto& parameterInt = std::dynamic_pointer_cast<T>(parameter))
+			{
+				return parameterInt;
+			}
+		}
 
 
 	private:
-		std::vector<std::shared_ptr<Parameter> > _parameters;
-
+		std::map<std::string, std::shared_ptr<Parameter>> _parameters;
 	};
 }

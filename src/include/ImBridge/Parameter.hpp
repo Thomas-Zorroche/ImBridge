@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include "imgui/imgui.h"
 
 #include "Common.hpp"
 
@@ -9,42 +8,7 @@
 
 namespace ImBridge {
 
-
 	void displayHoverDescription(const std::string& desc);
-
-	template <typename UIFonction>
-	void drawParameter(const std::string& name, UIFonction uiFonction, const std::string& desc = "")
-	{
-		if (!name.empty())
-		{
-			float posX = (ImGui::GetCursorPosX() + (ImGui::GetColumnWidth() * 0.4) - ImGui::CalcTextSize(name.c_str()).x
-				- ImGui::GetScrollX() - 2 * ImGui::GetStyle().ItemSpacing.x);
-			if (posX > ImGui::GetCursorPosX())
-				ImGui::SetCursorPosX(posX);
-
-			ImGui::AlignTextToFramePadding();
-			ImGui::Text(name.c_str());
-			ImGui::SameLine();
-			displayHoverDescription(desc);
-		}
-
-		ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.55f);
-		ImGui::SetCursorPosX(ImGui::GetWindowWidth() * 0.4);
-
-		uiFonction();
-
-		if (name.empty() && !desc.empty())
-		{
-			ImGui::SameLine();
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.5, 0.5, 0.5, 1.0 });
-			ImGui::Text("(?)");
-			ImGui::PopStyleColor();
-			displayHoverDescription(desc);
-		}
-
-		ImGui::PopItemWidth();
-	}
-
 
 	/*
 	* Abstract Parameter Class
@@ -74,16 +38,7 @@ namespace ImBridge {
 			const std::string& desc = "")
 			: Parameter(name, desc), _value(value), _min(min), _max(max) {};
 
-		void render(float sliderSpeed = 0.1f) override
-		{
-			drawParameter(_name.c_str(), [this, sliderSpeed]()
-			{
-				if (ImGui::DragFloat(("##" + _name).c_str(), &_value, sliderSpeed, _min, _max))
-				{
-
-				}
-			}, _description);
-		};
+		void render(float sliderSpeed = 0.1f) override;
 
 	private:
 		float& _value;
@@ -96,23 +51,16 @@ namespace ImBridge {
 	public:
 		ParameterInt(const std::string& name, int& value, int min, int max,
 			const std::string& desc = "", CallbackInt callback = [](int) {})
-			: Parameter(name, desc), _value(value), _min(min), _max(max), _callback(callback) {};
+			: Parameter(name, desc), _value(value), minValue(min), maxValue(max), _callback(callback) {};
 
-		void render(float sliderSpeed = DEFAULT_SLIDER_SPEED) override
-		{
-			drawParameter(_name.c_str(), [this]()
-			{
-				if (ImGui::SliderInt(("##" + _name).c_str(), &_value, _min, _max))
-				{
-					_callback(_value);
-				}
-			}, _description);
-		};
+		void render(float sliderSpeed = DEFAULT_SLIDER_SPEED) override;
+
+	public:
+		int minValue;
+		int maxValue;
 
 	private:
 		int& _value;
-		int _min;
-		int _max;
 		CallbackInt _callback;
 	};
 
@@ -122,13 +70,7 @@ namespace ImBridge {
 		ParameterBoolean(const std::string& name, bool& value, const std::string& desc = "")
 			: Parameter(name, desc), _value(value) {};
 
-		void render(float sliderSpeed = DEFAULT_SLIDER_SPEED) override
-		{
-			drawParameter(_name.c_str(), [this]()
-			{
-				ImGui::Checkbox(_name.c_str(), &_value);
-			}, _description);
-		};
+		void render(float sliderSpeed = DEFAULT_SLIDER_SPEED) override;
 
 	private:
 		bool& _value;
@@ -141,16 +83,7 @@ namespace ImBridge {
 		ParameterVec3(const std::string& name, glm::vec3& value, const std::string& desc = "")
 			: Parameter(name, desc), _value(value) {};
 
-		void render(float sliderSpeed = DEFAULT_SLIDER_SPEED) override
-		{
-			drawParameter(_name, [this]()
-			{
-				if (ImGui::SliderFloat3(("##" + _name).c_str(), (float*)&(_value), -1000.0f, 1000.0f))
-				{
-
-				}
-			}, _description);
-		};
+		void render(float sliderSpeed = DEFAULT_SLIDER_SPEED) override;
 
 	private:
 		glm::vec3& _value;
@@ -165,25 +98,7 @@ namespace ImBridge {
 			unsigned int nItems, CallbackCombo callback, const std::string& desc = "")
 			: Parameter(name, desc), _items_separated_by_zeros(items_separated_by_zeros), _nItems(nItems), _callback(callback) {};
 
-		void render(float sliderSpeed = DEFAULT_SLIDER_SPEED) override
-		{
-			drawParameter(_name, [this]()
-			{
-
-				if (ImGui::Combo(("##" + _name).c_str(), &(int&)_id, _items_separated_by_zeros))
-				{
-					for (size_t i = 0; i < _nItems; i++)
-					{
-						if (i == _id)
-						{
-							_callback(_id);
-							break;
-						}
-					}
-				}
-			}, _description);
-		};
-
+		void render(float sliderSpeed = DEFAULT_SLIDER_SPEED) override;
 
 	private:
 		const char* _items_separated_by_zeros;
