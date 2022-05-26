@@ -94,7 +94,6 @@ void ParameterCombo::render(float sliderSpeed)
 {
 	drawParameter(_name, [this]()
 		{
-
 			if (ImGui::Combo(("##" + _name).c_str(), &(int&)_id, _items_separated_by_zeros))
 			{
 				for (size_t i = 0; i < _nItems; i++)
@@ -107,6 +106,38 @@ void ParameterCombo::render(float sliderSpeed)
 				}
 			}
 		}, _description);
+};
+
+void ParameterListBox::render(float sliderSpeed)
+{
+	drawParameter(_name, [this]()
+	{
+		if (ImGui::BeginListBox(("##" + _name).c_str()))
+		{
+			for (int n = 0; n < _items.size(); n++)
+			{
+				if (_items[n] == "-")
+				{
+					ImGui::Separator();
+					continue;
+				}
+
+				const bool is_selected = (item_current_idx == n);
+				if (ImGui::Selectable(_items[n].c_str(), is_selected))
+				{
+					item_current_idx = n;
+					_callback(n);
+				}
+
+				// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+				if (is_selected)
+				{
+					ImGui::SetItemDefaultFocus();
+				}
+			}
+			ImGui::EndListBox();
+		}
+	}, _description);
 };
 
 }

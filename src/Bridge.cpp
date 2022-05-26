@@ -41,6 +41,12 @@ namespace ImBridge {
 		_parameters.insert({ label, parameter });
 	}
 
+	void Bridge::addListBox(const std::string& label, const std::vector<std::string>& items, CallbackCombo callback, const std::string& desc)
+	{
+		auto parameter = std::make_shared<ParameterListBox>(label, items, callback, desc);
+		_parameters.insert({ label, parameter });
+	}
+
 	const std::map<std::string, std::shared_ptr<Parameter>>::iterator Bridge::getParametersBegin()
 	{
 		return _parameters.begin();
@@ -50,5 +56,7 @@ namespace ImBridge {
 	{
 		return _parameters.end();
 	}
+
+
 }
 

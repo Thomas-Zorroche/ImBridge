@@ -100,11 +100,31 @@ namespace ImBridge {
 
 		void render(float sliderSpeed = DEFAULT_SLIDER_SPEED) override;
 
-	private:
+	public:
 		const char* _items_separated_by_zeros;
 		unsigned int _nItems;
+	
+	private:
 		unsigned int _id = 0;
 		CallbackCombo _callback;
+	};
+
+	class ParameterListBox : public Parameter
+	{
+	public:
+
+		ParameterListBox(const std::string& name, const std::vector<std::string>& items,
+			CallbackCombo callback, const std::string& desc = "")
+			: Parameter(name, desc), _items(items), _callback(callback) {};
+
+		void render(float sliderSpeed = DEFAULT_SLIDER_SPEED) override;
+
+	public:
+		std::vector<std::string> _items;
+
+	private:
+		CallbackCombo _callback;
+		int item_current_idx = 0;
 	};
 
 }
